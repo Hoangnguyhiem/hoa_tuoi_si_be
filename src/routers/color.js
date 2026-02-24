@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createColor, getAllColor } from "../controllers/color";
+import { createColor, getAllColor } from "../controllers/color.js";
 
 const router = Router()
 

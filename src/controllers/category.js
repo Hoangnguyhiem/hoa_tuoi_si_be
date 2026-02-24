@@ -1,5 +1,5 @@
 import { StatusCodes } from "http-status-codes"
-import Category from "../models/category"
+import Category from "../models/category.js"
 
 export const addCategories = async (req, res) => {
     try {

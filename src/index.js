@@ -1,29 +1,24 @@
-import bodyParser from "body-parser";
-import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
 import morgan from "morgan";
-import connectMongoDB from "./config/db";
-import user from "./routers/user";
-import color from "./routers/color";
-import delivery from "./routers/delivery";
-import category from "./routers/category";
-import order from "./routers/order";
+import connectMongoDB from "./config/db.js";
+import user from "./routers/user.js";
+import color from "./routers/color.js";
+import delivery from "./routers/delivery.js";
+import category from "./routers/category.js";
+import order from "./routers/order.js";
 
 const app = express();
 dotenv.config();
 // middleware)
-app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(cors());
 app.use(morgan("tiny"));
 
 // connect db
-const dbURL = process.env.DB_URI
+const { DB_URI , PORT } = process.env;
 
-console.log(dbURL);
-
-connectMongoDB(dbURL);
+connectMongoDB(DB_URI);
 // mongodb+srv://vinsomatem97:vinsomatem97@mlb.jo6kt.mongodb.net/?retryWrites=true&w=majority&appName=MLB
 // routers
 app.use("/api", user);
@@ -32,4 +27,7 @@ app.use("/api", delivery);
 app.use("/api", category);
 app.use("/api", order);
 
-export const viteNodeApp = app;
+app.listen(PORT, () => {
+  console.log(`Project running port ${PORT}`);
+});
+

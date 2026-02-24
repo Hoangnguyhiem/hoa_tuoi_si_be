@@ -1,5 +1,5 @@
 import { StatusCodes } from "http-status-codes"
-import Color from "../models/color"
+import Color from "../models/color.js"
 
 export const createColor = async (req, res) => {
     try {

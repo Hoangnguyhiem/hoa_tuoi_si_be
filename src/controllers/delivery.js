@@ -1,5 +1,5 @@
 import { StatusCodes } from "http-status-codes"
-import Delivery from "../models/delivery"
+import Delivery from "../models/delivery.js"
 
 export const addDelivery = async (req, res) => {
     try {
