@@ -7,6 +7,7 @@ import color from "./routers/color.js";
 import delivery from "./routers/delivery.js";
 import category from "./routers/category.js";
 import order from "./routers/order.js";
+import cors from "cors";
 
 const app = express();
 dotenv.config();
@@ -14,6 +15,7 @@ dotenv.config();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(morgan("tiny"));
+app.use(cors());
 
 // connect db
 const { DB_URI , PORT } = process.env;
