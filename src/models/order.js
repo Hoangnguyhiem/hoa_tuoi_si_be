@@ -9,20 +9,28 @@ const productSchema = new Schema(
         },
         categoryId: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "Categories"
+            ref: "Categories",
+            required: true
         },
         colorId: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "Color"
+            ref: "Color",
+            required: true
         },
         price: {
-            type: Number
+            type: Number,
+            required: true
+        },
+        bundle: {
+            type: Number,
+            required: true
         },
         quantity: {
-            type: Number
+            type: Number,
+            required: true
         },
         total: {
-            type: Number
+            type: Number,
         },
         status: {
             type: Boolean,
@@ -36,11 +44,13 @@ const orderSchema = new Schema(
     {
         userId: {
             type: Schema.Types.ObjectId,
-            ref: "User"
+            ref: "User",
+            required: true
         },
         deliveryId: {
             type: Schema.Types.ObjectId,
-            ref: "Delivery"
+            ref: "Delivery",
+            required: true
         },
         note: {
             type: String
@@ -50,7 +60,12 @@ const orderSchema = new Schema(
             type: Number
         },
         pay: {
-            type: Number
+            type: Number,
+            default: 0
+        },
+        otherFee: {
+            type: Number,
+            default: 0
         },
         paid: {
             type: Number
@@ -62,19 +77,19 @@ const orderSchema = new Schema(
 // → mỗi lần save order → tự tính total
 orderSchema.pre("save", function (next) {
   this.totalPrice = this.products.reduce(
-    (sum, item) => sum + item.price * item.quantity,
+    (sum, item) => sum + item.price * item.bundle * item.quantity,
     0
   );
   next();
 });
 
 orderSchema.pre("save", function (next) {
-  this.paid = this.totalPrice - this.pay;
+  this.paid = this.totalPrice + this.otherFee - this.pay;
   next();
 });
 
 productSchema.pre("save", function (next) {
-    this.total = this.price * this.quantity;
+    this.total = this.price * this.bundle * this.quantity;
     next();
 });
 

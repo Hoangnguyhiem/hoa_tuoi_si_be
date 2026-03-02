@@ -5,19 +5,24 @@ const deliverySchema = new Schema(
     {
         name: {
             type: String,
+            required: true
         },
         phone: {
             type: String,
-            unique: true
+            unique: true,
+            required: true
         },
         province: {
-            type: String
+            type: String,
+            required: true
         },
         address: {
-            type: String
+            type: String,
+            required: true
         },
         type: {
-            type: String
+            type: String,
+            required: true
         },
         note: {
             type: String

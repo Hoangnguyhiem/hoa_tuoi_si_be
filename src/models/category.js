@@ -4,7 +4,8 @@ import { Schema } from "mongoose";
 const categoriesSchema = new Schema(
     {
         name: {
-            type: String
+            type: String,
+            required: true
         }
     },
     {timestamps: true, versionKey: false}
