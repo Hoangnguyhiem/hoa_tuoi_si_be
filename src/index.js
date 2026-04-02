@@ -16,7 +16,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(morgan("tiny"));
 app.use(cors({
-  origin: "https://hoa-tuoi-si-fe.vercel.app"
+  origin: [
+    "https://hoa-tuoi-si-fe.vercel.app",
+    "http://localhost:5173"
+  ]
 }));
 
 // connect db
