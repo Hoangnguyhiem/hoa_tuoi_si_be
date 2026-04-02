@@ -8,8 +8,6 @@ import delivery from "./routers/delivery.js";
 import category from "./routers/category.js";
 import order from "./routers/order.js";
 import cors from "cors";
-import path from "path";
-import { fileURLToPath } from "url";
 
 const app = express();
 dotenv.config();
@@ -17,7 +15,9 @@ dotenv.config();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(morgan("tiny"));
-app.use(cors());
+app.use(cors({
+  origin: "https://hoa-tuoi-si.onrender.com"
+}));
 
 // connect db
 const { DB_URI , PORT } = process.env;
@@ -30,18 +30,6 @@ app.use("/api", color);
 app.use("/api", delivery);
 app.use("/api", category);
 app.use("/api", order);
-
-// fix __dirname
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-// static React
-app.use(express.static(path.join(__dirname, "../dist")));
-
-// fallback React Router
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../dist", "index.html"));
-});
 
 app.listen(PORT, () => {
   console.log(`Project running port ${PORT}`);
