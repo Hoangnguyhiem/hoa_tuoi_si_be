@@ -8,6 +8,8 @@ import delivery from "./routers/delivery.js";
 import category from "./routers/category.js";
 import order from "./routers/order.js";
 import cors from "cors";
+import path from "path";
+import { fileURLToPath } from "url";
 
 const app = express();
 dotenv.config();
@@ -29,10 +31,14 @@ app.use("/api", delivery);
 app.use("/api", category);
 app.use("/api", order);
 
-// Static React
+// fix __dirname
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// static React
 app.use(express.static(path.join(__dirname, "dist")));
 
-// Fallback cuối cùng
+// fallback React Router
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "dist", "index.html"));
 });
