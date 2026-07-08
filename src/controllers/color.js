@@ -18,3 +18,12 @@ export const getAllColor = async (req, res) => {
         return res.status(StatusCodes.BAD_REQUEST).json({message: error.message})
     }
 }
+
+export const deleteColor = async (req, res) => {
+    try {
+        const color = await Color.findByIdAndDelete(req.params.id)
+        return res.status(StatusCodes.OK).json(color)
+    } catch (error) {
+        return res.status(StatusCodes.BAD_REQUEST).json({mesage:error.message})
+    }
+}

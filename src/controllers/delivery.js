@@ -18,3 +18,12 @@ export const getDelivery = async (req, res) => {
         return res.status(StatusCodes.BAD_REQUEST).json({mesage:error.message})
     }
 }
+
+export const deleteDelivery = async (req, res) => {
+    try {
+        const delivery = await Delivery.findByIdAndDelete(req.params.id)
+        return res.status(StatusCodes.OK).json(delivery)
+    } catch (error) {
+        return res.status(StatusCodes.BAD_REQUEST).json({mesage:error.message})
+    }
+}
