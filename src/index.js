@@ -17,7 +17,7 @@ app.use(express.json());
 app.use(morgan("tiny"));
 app.use(cors({
   origin: [
-    "https://hoa-tuoi-si-fe.vercel.app",
+    "https://www.hoatuoihanoi.click",
     "http://localhost:5173"
   ]
 }));
