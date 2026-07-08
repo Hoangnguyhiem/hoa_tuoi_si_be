@@ -50,12 +50,22 @@ const orderSchema = new Schema(
         deliveryId: {
             type: Schema.Types.ObjectId,
             ref: "Delivery",
-            required: true
+            required: true,
         },
         note: {
             type: String
         },
         products: [productSchema],
+        userPhone: {
+            type: String,
+        },
+        userAddress: {
+            type: String,
+        },
+        pin: {
+            type: Boolean,
+            default: false
+        },
         totalPrice: {
             type: Number
         },
@@ -69,28 +79,69 @@ const orderSchema = new Schema(
         },
         paid: {
             type: Number
+        },
+        status: {
+            type: String,
+            enum: [
+                "pending",
+                "success",
+            ],
+            default: "pending"
         }
     },
     { timestamps: true, versionKey: false }
 )
 
-// → mỗi lần save order → tự tính total
-orderSchema.pre("save", function (next) {
-  this.totalPrice = this.products.reduce(
-    (sum, item) => sum + item.price * item.bundle * item.quantity,
-    0
-  );
-  next();
-});
+const updateTotals = (order) => {
+
+    order.products = order.products.map((item) => ({
+        ...item,
+        total: item.price * item.bundle * item.quantity
+    }));
+
+    order.totalPrice = order.products.reduce(
+        (sum, item) => sum + item.total,
+        0
+    );
+
+    order.paid =
+        order.totalPrice +
+        order.otherFee -
+        order.pay;
+};
+
+
+orderSchema.statics.updateStatus = async function(orderId){
+
+    const order = await this.findById(orderId);
+    
+    if(!order) return;
+
+    const allCompleted = order.products.every(
+        item=>item.status
+    );
+
+    order.status =
+        allCompleted && order.paid===0
+            ?"success"
+            :"pending";
+
+    await order.save();
+
+}
 
 orderSchema.pre("save", function (next) {
-  this.paid = this.totalPrice + this.otherFee - this.pay;
-  next();
-});
-
-productSchema.pre("save", function (next) {
-    this.total = this.price * this.bundle * this.quantity;
+    updateTotals(this);
     next();
 });
+
+orderSchema.pre("findOneAndUpdate", function (next) {
+    const update = this.getUpdate();
+    updateTotals(update);
+    next();
+});
+
+
+
 
 export default mongoose.model.Order || mongoose.model("Order", orderSchema)

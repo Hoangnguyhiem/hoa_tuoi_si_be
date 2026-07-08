@@ -18,3 +18,12 @@ export const getCategories = async (req, res) => {
         return res.status(StatusCodes.BAD_REQUEST).json({ message: error.message })
     }
 }
+
+export const deleteCategoriesById = async (req, res) => {
+    try {
+        const category = await Category.findByIdAndDelete(req.params.id)
+        return res.status(StatusCodes.OK).json(category)
+    } catch (error) {
+        return res.status(StatusCodes.BAD_REQUEST).json({ message: error.message })
+    }
+}
